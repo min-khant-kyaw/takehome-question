@@ -1,52 +1,54 @@
 package com.example.trialqn;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.trialqn.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class WebsiteListAdapter extends BaseAdapter {
+public class WebsiteListAdapter extends ArrayAdapter<Website> {
+
+    private static final String TAG = "WebsiteListAdapter";
 
     private Context mContext;
-    private List<Website> mWebsiteList;
+    int mResource;
 
-    //Constructor
-    public WebsiteListAdapter(Context mContext, List<Website> mWebsiteList) {
-        this.mContext = mContext;
-        this.mWebsiteList = mWebsiteList;
+    public WebsiteListAdapter( Context context, int resource,  ArrayList<Website> objects) {
+        super(context, resource, objects);
+        mContext = context;
+        mResource = resource;
     }
 
-    @Override
-    public int getCount() {
-        return mWebsiteList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mWebsiteList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = View.inflate(mContext, R.layout.listitem, null);
-        ImageView image = v.findViewById(R.id.image);
-        TextView listTitle = v.findViewById(R.id.listTitle);
-        TextView listDesc = v.findViewById(R.id.listDesc);
-        //SetText
-        image.setImageURI(mWebsiteList.get(position).getImage());
-        listTitle.setText(mWebsiteList.get(position).getTitle());
-        listDesc.setText(mWebsiteList.get(position).getUrl());
+        //Get Website Information
+        Integer image = getItem(position).getImage();
+        String title = getItem(position).getTitle();
+        String url = getItem(position).getUrl();
 
-        return v;
+        //Create new Website object with the information
+        Website website = new Website(image, title, url);
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        convertView = inflater.inflate(mResource, parent, false);
+
+        ImageView listImage = convertView.findViewById(R.id.listImage);
+        TextView listTitle = convertView.findViewById(R.id.listTitle);
+        TextView listUrl = convertView.findViewById(R.id.listUrl);
+
+        listImage.setImageResource(image);
+        listTitle.setText(title);
+        listUrl.setText(url);
+
+        return convertView;
     }
 }
