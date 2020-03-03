@@ -43,6 +43,18 @@ public class MainActivity extends AppCompatActivity {
         websiteList.add(google);
         websiteList.add(yahoo);
         websiteList.add(cna);
+        websiteList.add(google);
+        websiteList.add(yahoo);
+        websiteList.add(cna);
+        websiteList.add(google);
+        websiteList.add(yahoo);
+        websiteList.add(cna);
+        websiteList.add(google);
+        websiteList.add(yahoo);
+        websiteList.add(cna);
+        websiteList.add(google);
+        websiteList.add(yahoo);
+        websiteList.add(cna);
 
         WebsiteListAdapter adapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
         listView.setAdapter(adapter);
