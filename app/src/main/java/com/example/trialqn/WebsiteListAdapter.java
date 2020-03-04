@@ -1,24 +1,21 @@
 package com.example.trialqn;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +32,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         TextView title;
         TextView url;
         ImageView image;
+        WebView webView;
     }
 
     public WebsiteListAdapter( Context context, int resource,  ArrayList<Website> objects) {
@@ -57,7 +55,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         final View result;
 
         //ViewHolder
-        ViewHolder holder;
+        final ViewHolder holder;
 
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -66,6 +64,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
             holder.image = (ImageView) convertView.findViewById(R.id.listImage);
             holder.title = (TextView) convertView.findViewById(R.id.listTitle);
             holder.url = (TextView) convertView.findViewById(R.id.listUrl);
+            holder.webView = (WebView) convertView.findViewById(R.id.webView);
 
             result = convertView;
             convertView.setTag(holder);
@@ -80,9 +79,27 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         result.startAnimation(animation);
         lastPosition = position;
 
-        holder.image.setImageResource(image);
-        holder.title.setText(title);
+//        holder.image.setImageResource(image);
         holder.url.setText(url);
+
+        //WebView Object
+        holder.webView.loadUrl(url);
+        holder.webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                String t = view.getTitle();
+                holder.title.setText(t);
+            }
+        });
+
+        holder.webView.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+                holder.image.setImageBitmap(icon);
+            }
+        });
 
         return convertView;
     }

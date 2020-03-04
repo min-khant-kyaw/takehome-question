@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView listImage;
     TextView listTitle, listDesc;
     FloatingActionButton addBtn;
+    WebView webView;
+
     private ArrayList<String> items;
 //    private ArrayList<Website> mWebsiteList;
     private ArrayAdapter<String> adapter;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listView);
 
+        webView = findViewById(R.id.webView);
         listImage = findViewById(R.id.listImage);
         listTitle = findViewById(R.id.listTitle);
         listDesc = findViewById(R.id.listUrl);
@@ -40,18 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Add Websites to ArrayList
         ArrayList<Website> websiteList = new ArrayList<>();
-        websiteList.add(google);
-        websiteList.add(yahoo);
-        websiteList.add(cna);
-        websiteList.add(google);
-        websiteList.add(yahoo);
-        websiteList.add(cna);
-        websiteList.add(google);
-        websiteList.add(yahoo);
-        websiteList.add(cna);
-        websiteList.add(google);
-        websiteList.add(yahoo);
-        websiteList.add(cna);
         websiteList.add(google);
         websiteList.add(yahoo);
         websiteList.add(cna);
