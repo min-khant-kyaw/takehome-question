@@ -92,15 +92,31 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
+//                    case R.id.select_all:
+//                        final int checkedCount  = websiteList.size();
+//                        // If item  is already selected or checked then remove or
+//                        // unchecked  and again select all
+//                        listviewadapter.removeSelection();
+//                        for (int i = 0; i <  checkedCount; i++) {
+//
+//                            list.setItemChecked(i,true);
+//                            listviewadapter.toggleSelection(i);
+//                        }
+//                        // Set the  CAB title according to total checked items
+//                        // Calls  toggleSelection method from ListViewAdapter Class
+//
+//                        // Count no.  of selected item and print it
+//
+//                        mode.setTitle(checkedCount  + "  Selected");
+//
+//                        return true;
                     case R.id.delete:
                         // Calls getSelectedIds method from ListViewAdapter Class
-                        SparseBooleanArray selected = listviewadapter
-                                .getSelectedIds();
+                        SparseBooleanArray selected = listviewadapter.getSelectedIds();
                         // Captures all selected ids with a loop
                         for (int i = (selected.size() - 1); i >= 0; i--) {
                             if (selected.valueAt(i)) {
-                                Website selecteditem = listviewadapter
-                                        .getItem(selected.keyAt(i));
+                                Website selecteditem = listviewadapter.getItem(selected.keyAt(i));
                                 // Remove selected items following the ids
                                 listviewadapter.remove(selecteditem);
                             }
