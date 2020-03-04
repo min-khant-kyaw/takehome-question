@@ -15,16 +15,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupDialog.PopupDialogListener {
     ListView listView;
     ImageView listImage;
     TextView listTitle, listDesc;
     FloatingActionButton addBtn;
     WebView webView;
 
-    private ArrayList<String> items;
-//    private ArrayList<Website> mWebsiteList;
-    private ArrayAdapter<String> adapter;
+    //Add Websites to ArrayList
+    ArrayList<Website> websiteList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         Website yahoo = new Website(R.drawable.ic_adb_black_24dp, "Yahoo", "https://www.yahoo.com");
         Website cna = new Website(R.drawable.ic_announcement, "CNA", "https://www.channelnewsasia.com");
 
-        //Add Websites to ArrayList
-        ArrayList<Website> websiteList = new ArrayList<>();
         websiteList.add(google);
         websiteList.add(yahoo);
         websiteList.add(cna);
@@ -63,5 +60,12 @@ public class MainActivity extends AppCompatActivity {
     public void showPopUp() {
         PopupDialog popupDialog = new PopupDialog();
         popupDialog.show(getSupportFragmentManager(), "popup Dialog");
+    }
+
+    public void addModel(Integer image, String url, String title) {
+        Website newWebsite = new Website(image, title, url);
+        websiteList.add(newWebsite);
+        WebsiteListAdapter adapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
+        listView.setAdapter(adapter);
     }
 }
