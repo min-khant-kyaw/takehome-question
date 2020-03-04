@@ -27,18 +27,18 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
 
     private ArrayList<Website> websiteList;
     private Context context;
-//    private int mResource;
+    //    private int mResource;
     private int lastPosition = -1;
     private SparseBooleanArray mSelectedItemsIds;
     LayoutInflater inflater;
 
-    public WebsiteListAdapter( Context context, int resourceId,
-                               ArrayList<Website> websiteList) {
+    public WebsiteListAdapter(Context context, int resourceId,
+                              ArrayList<Website> websiteList) {
         super(context, resourceId, websiteList);
-        mSelectedItemsIds = new  SparseBooleanArray();
+        mSelectedItemsIds = new SparseBooleanArray();
         this.context = context;
         this.websiteList = websiteList;
-        inflater =  LayoutInflater.from(context);
+        inflater = LayoutInflater.from(context);
 //        mResource = resource;
     }
 
@@ -66,7 +66,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         //ViewHolder
         final ViewHolder holder;
 
-        if(convertView == null) {
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.listitem, null);
@@ -76,9 +76,9 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
             holder.webView = (WebView) convertView.findViewById(R.id.webView);
 
             result = convertView;
+
             convertView.setTag(holder);
-        }
-        else {
+        } else {
             result = convertView;
             holder = (ViewHolder) convertView.getTag();
         }
@@ -92,7 +92,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         holder.url.setText(url);
         //WebView Object
         holder.webView.loadUrl(url);
-        holder.webView.setWebViewClient(new WebViewClient(){
+        holder.webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 String t = view.getTitle();
@@ -109,6 +109,8 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
             }
         });
 
+        Animation animFadeIn = AnimationUtils.loadAnimation(context.getApplicationContext(),R.anim.fade_in_anim);
+        convertView.startAnimation(animFadeIn);
         return convertView;
     }
 
