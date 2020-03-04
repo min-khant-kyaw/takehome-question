@@ -1,8 +1,13 @@
 package com.example.trialqn;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
     TextView listTitle, listDesc;
     FloatingActionButton addBtn;
     WebView webView;
+    Toolbar toolbar;
 
     //Add Websites to ArrayList
     ArrayList<Website> websiteList = new ArrayList<>();
@@ -31,11 +37,15 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listView);
 
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         webView = findViewById(R.id.webView);
         listImage = findViewById(R.id.listImage);
         listTitle = findViewById(R.id.listTitle);
         listDesc = findViewById(R.id.listUrl);
         addBtn = findViewById(R.id.addBtn);
+
+        //Setting App Toolbar
+        setSupportActionBar(toolbar);
 
         //Create the Website Object
         Website google = new Website(R.drawable.ic_search_black_24dp, "Google", "https://www.google.com");
@@ -55,6 +65,18 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
                 showPopUp();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public void showPopUp() {

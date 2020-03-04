@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">trialQn</string>
+    <string name="app_name">Trial Question</string>
+    <string name="appbar_menu1">Settings</string>
 </resources>
