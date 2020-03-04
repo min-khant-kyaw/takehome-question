@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Trial Question</string>
-    <string name="appbar_menu1">Settings</string>
+    <string name="sort">Sort</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.trialqn;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,12 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
 
     private static final String TAG = "WebsiteListAdapter";
 
+    private ArrayList<Website> websites;
     private Context mContext;
     private int mResource;
     private int lastPosition = -1;
+    private SparseBooleanArray mSelectedItemsIds;
+    LayoutInflater inflater;
 
     static class ViewHolder {
         TextView title;
@@ -35,10 +39,13 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         WebView webView;
     }
 
-    public WebsiteListAdapter( Context context, int resource,  ArrayList<Website> objects) {
-        super(context, resource, objects);
+    public WebsiteListAdapter( Context context, int resource,  ArrayList<Website> websites) {
+        super(context, resource, websites);
         mContext = context;
         mResource = resource;
+        mSelectedItemsIds = new  SparseBooleanArray();
+        this.websites = websites;
+        inflater =  LayoutInflater.from(context);
     }
 
     @NonNull
@@ -59,8 +66,8 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
 
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.listitem, null);
             holder.image = (ImageView) convertView.findViewById(R.id.listImage);
             holder.title = (TextView) convertView.findViewById(R.id.listTitle);
             holder.url = (TextView) convertView.findViewById(R.id.listUrl);
@@ -79,9 +86,8 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         result.startAnimation(animation);
         lastPosition = position;
 
-//        holder.image.setImageResource(image);
+        //Capture position and set to the TextViews
         holder.url.setText(url);
-
         //WebView Object
         holder.webView.loadUrl(url);
         holder.webView.setWebViewClient(new WebViewClient(){
@@ -91,7 +97,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
                 holder.title.setText(t);
             }
         });
-
+        //Capture position and set to the ImageView
         holder.webView.setWebChromeClient(new WebChromeClient() {
 
             @Override
@@ -102,5 +108,41 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         });
 
         return convertView;
+    }
+
+    @Override
+    public void remove(Website object) {
+        websites.remove(object);
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<Website> getWebsites() {
+        return websites;
+    }
+
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+
+    public void removeSelection() {
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+
+    // Item checked on selection
+    public void selectView(int position, boolean value) {
+        if (value)
+            mSelectedItemsIds.put(position, value);
+        else
+            mSelectedItemsIds.delete(position);
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+
+    public SparseBooleanArray getSelectedIds() {
+        return mSelectedItemsIds;
     }
 }
