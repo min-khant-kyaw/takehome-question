@@ -2,4 +2,5 @@
     <string name="app_name">Trial Question</string>
     <string name="sort">Sort</string>
     <string name="delete">Delete</string>
+    <string name="settings">Settings</string>
 </resources>

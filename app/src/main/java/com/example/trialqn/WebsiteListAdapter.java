@@ -25,28 +25,30 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
 
     private static final String TAG = "WebsiteListAdapter";
 
-    private ArrayList<Website> websites;
-    private Context mContext;
-    private int mResource;
+    private ArrayList<Website> websiteList;
+    private Context context;
+//    private int mResource;
     private int lastPosition = -1;
     private SparseBooleanArray mSelectedItemsIds;
     LayoutInflater inflater;
 
-    static class ViewHolder {
+    public WebsiteListAdapter( Context context, int resourceId,
+                               ArrayList<Website> websiteList) {
+        super(context, resourceId, websiteList);
+        mSelectedItemsIds = new  SparseBooleanArray();
+        this.context = context;
+        this.websiteList = websiteList;
+        inflater =  LayoutInflater.from(context);
+//        mResource = resource;
+    }
+
+    private class ViewHolder {
         TextView title;
         TextView url;
         ImageView image;
         WebView webView;
     }
 
-    public WebsiteListAdapter( Context context, int resource,  ArrayList<Website> websites) {
-        super(context, resource, websites);
-        mContext = context;
-        mResource = resource;
-        mSelectedItemsIds = new  SparseBooleanArray();
-        this.websites = websites;
-        inflater =  LayoutInflater.from(context);
-    }
 
     @NonNull
     @Override
@@ -65,7 +67,7 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         final ViewHolder holder;
 
         if(convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(mContext);
+            LayoutInflater inflater = LayoutInflater.from(context);
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.listitem, null);
             holder.image = (ImageView) convertView.findViewById(R.id.listImage);
@@ -77,11 +79,11 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
             convertView.setTag(holder);
         }
         else {
-            holder = (ViewHolder) convertView.getTag();
             result = convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        Animation animation = AnimationUtils.loadAnimation(mContext,
+        Animation animation = AnimationUtils.loadAnimation(context,
                 (position > lastPosition) ? R.anim.load_down_anim : R.anim.load_up_anim);
         result.startAnimation(animation);
         lastPosition = position;
@@ -112,12 +114,12 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
 
     @Override
     public void remove(Website object) {
-        websites.remove(object);
+        websiteList.remove(object);
         notifyDataSetChanged();
     }
 
-    public ArrayList<Website> getWebsites() {
-        return websites;
+    public ArrayList<Website> getWebsiteList() {
+        return websiteList;
     }
 
     public void toggleSelection(int position) {
@@ -129,7 +131,6 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
         notifyDataSetChanged();
     }
 
-    // Item checked on selection
     public void selectView(int position, boolean value) {
         if (value)
             mSelectedItemsIds.put(position, value);

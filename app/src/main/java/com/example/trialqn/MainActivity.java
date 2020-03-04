@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AbsListView;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,24 +30,24 @@ import java.util.Comparator;
 public class MainActivity extends AppCompatActivity implements PopupDialog.PopupDialogListener {
 
     //Declare Variables
-    ListView listView;
+    ListView list;
     ImageView listImage;
     TextView listTitle, listDesc;
     FloatingActionButton addBtn;
     WebView webView;
     Toolbar toolbar;
     WebsiteListAdapter listviewadapter;
-    private static ArrayList<Website> websiteList = new ArrayList<>();
-    private boolean ascending = true;
+    private static ArrayList<Website> websiteList = new ArrayList<Website>();
+    private boolean ascending = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = findViewById(R.id.listView);
+        list = findViewById(R.id.listView);
 
         toolbar = (Toolbar) findViewById(R.id.app_bar);
-        webView = findViewById(R.id.webView);
+//        webView = findViewById(R.id.webView);
         listImage = findViewById(R.id.listImage);
         listTitle = findViewById(R.id.listTitle);
         listDesc = findViewById(R.id.listUrl);
@@ -56,16 +56,31 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
         //Setting App Toolbar
         setSupportActionBar(toolbar);
 
-        this.fillData();
+        //Create the Website Object
+        Website google = new Website(R.drawable.image_failed, "Test title", "https://google.com");
+        Website yahoo = new Website(R.drawable.image_failed, "Test title", "https://yahoo.com");
+        Website cna = new Website(R.drawable.image_failed, "Test title", "https://channelnewsasia.com");
 
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        //Capture ListView Item Click
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+        //add them to ArrayList
+        websiteList.add(google);
+        websiteList.add(yahoo);
+        websiteList.add(cna);
+
+        listviewadapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
+
+        //show adapter in view and sort out the data
+        list.setAdapter(listviewadapter);
+        this.sortData(true);
+
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        // Capture ListView item click
+        list.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
             @Override
             public void onItemCheckedStateChanged(ActionMode mode,
                                                   int position, long id, boolean checked) {
                 // Capture total checked items
-                final int checkedCount = listView.getCheckedItemCount();
+                final int checkedCount = list.getCheckedItemCount();
                 // Set the CAB title according to total checked items
                 mode.setTitle(checkedCount + " Selected");
                 // Calls toggleSelection method from ListViewAdapter Class
@@ -75,18 +90,21 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.action_delete:
+                    case R.id.delete:
                         // Calls getSelectedIds method from ListViewAdapter Class
-                        SparseBooleanArray selected = listviewadapter.getSelectedIds();
+                        SparseBooleanArray selected = listviewadapter
+                                .getSelectedIds();
                         // Captures all selected ids with a loop
                         for (int i = (selected.size() - 1); i >= 0; i--) {
                             if (selected.valueAt(i)) {
-                                Website selectedItem = listviewadapter.getItem(selected.keyAt(i));
+                                Website selecteditem = listviewadapter
+                                        .getItem(selected.keyAt(i));
                                 // Remove selected items following the ids
-                                listviewadapter.remove(selectedItem);
+                                listviewadapter.remove(selecteditem);
                             }
                         }
                         // Close CAB
+                        getSupportActionBar().show();
                         mode.finish();
                         return true;
                     default:
@@ -96,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                mode.getMenuInflater().inflate(R.menu.menu, menu);
+                getSupportActionBar().hide();
+                mode.getMenuInflater().inflate(R.menu.main, menu);
                 return true;
             }
 
@@ -104,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
             public void onDestroyActionMode(ActionMode mode) {
                 // TODO Auto-generated method stub
                 listviewadapter.removeSelection();
+                getSupportActionBar().show();
             }
 
             @Override
@@ -139,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
         return super.onOptionsItemSelected(item);
     }
 
+
     private void sortData(boolean asc) {
         //SORT ARRAY ASCENDING AND DESCENDING
         //https:// & https://www. could mess up with the sorting function
@@ -150,31 +171,14 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
                     return o1.getUrl().compareTo(o2.getUrl());
                 }
             });
-            Toast.makeText(this, "TRUE", Toast.LENGTH_SHORT).show();
         }
         else
         {
             Collections.reverse(websiteList);
-            Toast.makeText(this, "FALSE", Toast.LENGTH_SHORT).show();
         }
 
         WebsiteListAdapter adapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
-        listView.setAdapter(adapter);
-    }
-
-
-    public void fillData() {
-        //Create the Website Object
-        Website google = new Website(R.drawable.ic_search_black_24dp, "Google", "https://google.com");
-        Website yahoo = new Website(R.drawable.ic_adb_black_24dp, "Yahoo", "https://yahoo.com");
-        Website cna = new Website(R.drawable.ic_announcement, "CNA", "https://channelnewsasia.com");
-
-        websiteList.add(google);
-        websiteList.add(yahoo);
-        websiteList.add(cna);
-
-        listviewadapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
-        listView.setAdapter(listviewadapter);
+        list.setAdapter(adapter);
     }
 
 
@@ -188,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
         Website newWebsite = new Website(image, title, url);
         websiteList.add(newWebsite);
         WebsiteListAdapter adapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
-        listView.setAdapter(adapter);
+        list.setAdapter(adapter);
         this.sortData(true);
     }
 }
