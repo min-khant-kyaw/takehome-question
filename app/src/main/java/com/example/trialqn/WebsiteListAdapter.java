@@ -109,8 +109,8 @@ public class WebsiteListAdapter extends ArrayAdapter<Website> {
             }
         });
 
-        Animation animFadeIn = AnimationUtils.loadAnimation(context.getApplicationContext(),R.anim.fade_in_anim);
-        convertView.startAnimation(animFadeIn);
+//        Animation animFadeIn = AnimationUtils.loadAnimation(context.getApplicationContext(),R.anim.fade_in_anim);
+//        convertView.startAnimation(animFadeIn);
         return convertView;
     }
 

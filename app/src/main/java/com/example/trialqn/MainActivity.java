@@ -212,5 +212,7 @@ public class MainActivity extends AppCompatActivity implements PopupDialog.Popup
         WebsiteListAdapter adapter = new WebsiteListAdapter(this, R.layout.listitem, websiteList);
         list.setAdapter(adapter);
         this.sortData(true);
+        Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in_anim);
+        list.startAnimation(animFadeIn);
     }
 }
